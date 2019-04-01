@@ -1,0 +1,17 @@
+
+{% extends "base.html" %}
+
+
+{% block content %}
+    <h1>Hi, {{ user.username }}!</h1>
+
+
+    {% if formulas is defined %}
+    {% for formula in formulas %}
+    <p>
+     <a href="{{ url_for('calc_get', id=formula.id) }}">{{ formula.name }}</a>
+    </p>
+    {% endfor %}
+    {% endif %}
+
+{% endblock %}

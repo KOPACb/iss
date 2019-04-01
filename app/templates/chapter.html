@@ -1,0 +1,17 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Hi, {{ user.username }}!</h1>
+    <h2>{{ chapter.name }}</h2>
+    <h3>{{ chapter.short_description }}</h3>
+    {{ chapter.description }}
+    {% if files is defined %}
+    {% for file in files %}
+    <p>
+     <a href="{{ file.url }}">{{ file.filename }}</a>
+     file.url: {{ file.url }}
+    </p>
+    {% endfor %}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,19 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Hi, {{ user.username }}!</h1>
+    {% if user.level >= 0 %}
+        <a href="{{ url_for('add_chapter') }}">add chapter</a>
+    {% endif %}
+    {% if chapters is defined %}
+        {% for chapter in chapters %}
+            <div>
+            <p>
+            <a href="/chapter/{{ chapter.id }}">{{ chapter.name }}</a>
+            </p>
+            {{ chapter.short_description }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

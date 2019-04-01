@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>User: {{ user.username }}</h1>
+    <p>Level: {{ user.level }}</p>
+    {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+    {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
+    {% if user == current_user %}
+        <p><a href="{{ url_for('edit_profile') }}">Edit your profile</a></p>
+    {% endif %}
+    <hr>
+    {% if posts is defined %}
+    {% for post in posts %}
+    <p>
+    {{ post.author.username }} says: <b>{{ post.body }}</b>
+    </p>
+    {% endfor %}
+    {% endif %}
+
+    {% if files is defined %}
+    <h3>Files uploaded by user:</h3>
+    {% for file in files %}
+    <p>
+     <a href="{{ file.url }}">{{ file.filename }}</a>
+     file.url: {{ file.url }}
+    </p>
+    {% endfor %}
+    {% endif %}
+{% endblock %}
