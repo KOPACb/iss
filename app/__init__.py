@@ -16,6 +16,8 @@ login = LoginManager(app)
 login.login_view = 'login'
 
 
+
+
 from app import routes, models, errors
 from sqlalchemy.event import listen
 from app.models import User

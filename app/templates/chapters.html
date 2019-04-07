@@ -9,10 +9,12 @@
     {% if chapters is defined %}
         {% for chapter in chapters %}
             <div>
+             <hr>
             <p>
             <a href="/chapter/{{ chapter.id }}">{{ chapter.name }}</a>
             </p>
             {{ chapter.short_description }}
+             <hr>
             </div>
         {% endfor %}
     {% endif %}

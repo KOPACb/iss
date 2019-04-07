@@ -26,6 +26,13 @@
             {% endfor %}
         </p>
         <p>
+            {{ form.formulas.label }}<br>
+            {{ form.formulas }}<br>
+            {% for error in form.formulas.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
             {{ form.files.label }}<br>
             {{ form.files }}<br>
             {% for error in form.files.errors %}

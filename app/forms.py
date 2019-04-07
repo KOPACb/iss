@@ -52,5 +52,6 @@ class ChapterForm(FlaskForm):
     short_description = StringField('Short Description')
     description = TextAreaField('Description')
     files = SelectMultipleField('Documents to associate', coerce=int)
+    formulas = SelectMultipleField('Formulas to associate', coerce=int)
     submit = SubmitField('Submit')
 

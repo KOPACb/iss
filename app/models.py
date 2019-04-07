@@ -46,6 +46,11 @@ chapter_files = db.Table('chapter_files',
     db.Column('chapter_id', db.Integer, db.ForeignKey('chapter.id'))
 )
 
+chapter_formulas = db.Table('chapter_formulas',
+    db.Column('formula_id', db.Integer, db.ForeignKey('formula.id')),
+    db.Column('chapter_id', db.Integer, db.ForeignKey('chapter.id'))
+)
+
 class File(db.Model):
 #    __tablename__ = 'file'
     id = db.Column(db.Integer, primary_key=True)
@@ -70,8 +75,7 @@ class Chapter(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 #    user_id = db.relationship('User', backref=db.backref("chapters", lazy='dynamic'))
     files = db.relationship("File", secondary=chapter_files, backref=db.backref("chapters", lazy='dynamic'))
-
-
+    formulas = db.relationship("Formula", secondary=chapter_formulas, backref=db.backref("chapters", lazy='dynamic'))
 
 
 class Formula(db.Model):
@@ -81,3 +85,7 @@ class Formula(db.Model):
     created = db.Column(db.DateTime, default=datetime.utcnow())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     formula = db.Column(db.Text)
+
+    def formula_html(self):
+        html_formula = str(self.formula)
+        return html_formula.replace('\\', "\\\\")

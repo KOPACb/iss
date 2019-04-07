@@ -13,31 +13,25 @@
         <input type="text" name="name" id="name">
         <input type="textfield" name="description" id="description">
         <div class="mathfield" id='mathfield' >f(x)=</div>
-        <input type="text" name="output" id="output">  </input>
+        <input type="hidden" name="output" id="output">
+        <div class='latex-div' id='latex-div'></div>
         <input type="submit" name="send" value="submit" />
     </form>
+    <script src="/mathlive.js"></script>
     <script type='module' crossorigin="anonymous">
-        import MathLive from '/mathlive.mjs';
         const mathfield = MathLive.makeMathField('mathfield', {
             onContentDidChange: updateOutput,
             virtualKeyboardMode: "manual"
         });
-        {% if formula is defined %}
-        mathfield.perform(['insert', {{ formula }}, {insertionMode:"replaceAll"}]);
+        {% if formula.formula is defined %}
+        mathfield.perform(['insert', '{{ formula.formula_html() }}', {insertionMode:"replaceAll", format:'auto'}]);
         {% endif %}
         function updateOutput(mathfield) {
-            document.getElementById("output").value= mathfield.$latex();
+            document.getElementById("output").value=mathfield.$latex();
+            document.getElementById("latex-div").innerHTML=mathfield.$latex();
+            console.log(document.getElementById("latex-div"), document.getElementById("output"), mathfield.$latex())
         }
     </script>
-
-
-    {% if formulas is defined %}
-    {% for formula in formulas %}
-    <p>
-     <a href="{{ url_for('calc_get', id=formula.id) }}">{{ formula.name }}</a>
-    </p>
-    {% endfor %}
-    {% endif %}
 
 
 {% endblock %}

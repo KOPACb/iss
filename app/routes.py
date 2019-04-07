@@ -97,7 +97,7 @@ def user(username):
 @app.route('/upload_file', methods=['GET', 'POST'])
 @login_required
 def upload_file():
-    user = current_user.username
+    user = current_user
     if request.method == 'POST':
         new_file = request.files['file']
 #        if file and allowed_file(file.filename):
@@ -134,12 +134,18 @@ def chapters():
 def add_chapter():
     user = current_user
     raw_files=File.query.filter_by()
+    raw_formulas = Formula.query.filter_by()
     files=[]
     for file in raw_files:
         files.append((file.id, file.filename))
+    formulas=[]
+    for formula in raw_formulas:
+        formulas.append((formula.id, formula.name))
     form = ChapterForm()
     form.files.choices=files
     form.files.default=''
+    form.formulas.choices=formulas
+    form.formulas.default=''
 #    form.files.coerce='int'
     if form.validate_on_submit():
 #        for item in form:
@@ -182,27 +188,44 @@ def calc():
         db.session.commit()
     return render_template('formulas.html', user=user, formulas=formulas)
 
-@app.route('/calc/edit/', methods=['GET', 'POST'], defaults={'id': None})
-@app.route('/calc/edit/<id>', methods=['GET', 'POST'])
+@app.route('/formula/edit/', methods=['GET', 'POST'], defaults={'id': None})
+@app.route('/formula/edit/<id>', methods=['GET', 'POST'])
 @login_required
-def calc_edit(id):
+def formula_edit(id):
     user=current_user
-    formula = Formula.quert.filter_by(id=id).first_or_404()
+    if id:
+        formula = Formula.query.filter_by(id=id).first_or_404()
+        print("Formula: ", formula.formula)
+    else:
+        formula = None
     if request.method == 'POST':
         data = request.form.get('output')
-        f = Formula(name=request.form.get('name'), description=request.form.get('description'), formula=request.form.get('output'), id=request.form.get('id'))
+        if id:
+            f=Formula.query.filter_by(id=id).first_or_404()
+            f.name = request.form.get('name')
+            f.description = request.form.get('description')
+            f.formula = request.form.get('output')
+        else:
+            f = Formula(name=request.form.get('name'), description=request.form.get('description'), formula=request.form.get('output'), id=request.form.get('id'))
+        print(request.form.get('output'))
+        print(f.formula)
         db.session.add(f)
         db.session.commit()
-    return render_template('formula_editor.html', user=user, formulas=formula)
+    return render_template('formula_editor.html', user=user, formula=formula)
 
-@app.route('/calc/', defaults={'id': None})
-@app.route('/calc/<id>', methods=['GET', 'PUSH'])
+@app.route('/formula/', defaults={'id': None})
+@app.route('/formula/<id>', methods=['GET', 'PUSH'])
 @login_required
-def calc_get(id):
+def formula(id):
     user=current_user
-    calc=Formula.query.filter_by(id=id).first_or_404()
-    return render_template('formula_editor.html', user=user, formula=calc.formula)
+    if id:
+        formula = Formula.query.filter_by(id=id).first_or_404()
+        return render_template('formula_editor.html', user=user, formula=formula)
+    else:
+        formulas = Formula.query.filter_by().all()
+        return render_template('formulas.html', user=user, formulas=formulas)
 
-@app.route('/mathlive.mjs')
+
+@app.route('/mathlive.js')
 def mathlive():
-    return send_file('..\static\externals\mathlive\mathlive.mjs', mimetype='application/javascript')
+    return send_file('..\static\externals\mathlive\mathlive.js', mimetype='application/javascript')
