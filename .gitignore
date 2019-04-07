@@ -46,4 +46,4 @@ __pycache__
 #my
 static/uploads/
 migrations/
-#app.db
+app.db
